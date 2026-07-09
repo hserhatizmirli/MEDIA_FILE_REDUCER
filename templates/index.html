@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Süper Hızlı Medya Sıkıştırıcı</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Yükleme Animasyonu CSS'i */
+        .loader {
+            border-top-color: #f472b6; 
+            -webkit-animation: spinner 1.5s linear infinite; 
+            animation: spinner 1.5s linear infinite; 
+        }
+        @keyframes spinner { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-900 via-purple-900 to-black min-h-screen font-sans text-white flex flex-col items-center justify-center p-4">
+
+    <div class="text-center mb-12">
+        <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-yellow-500 mb-4 drop-shadow-lg">
+            Medya Sıkıştırıcı Pro ⚡
+        </h1>
+        <p class="text-lg text-gray-300">Büyük dosyaları yükle, sihrin gerçekleşmesini bekle ve anında indir!</p>
+        <p class="text-sm text-pink-400 mt-2 font-bold">Maksimum Yükleme Sınırı: 1 GB</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
+        
+        <div class="bg-white/10 backdrop-blur-lg border border-white/20 p-8 rounded-2xl shadow-2xl hover:shadow-pink-500/20 transition-all duration-300">
+            <h2 class="text-3xl font-bold mb-2 flex items-center gap-2">🎬 Video Küçült</h2>
+            <p class="text-sm text-gray-400 mb-6">Desteklenenler: MP4, MOV, AVI, MKV</p>
+            
+            <form action="/upload" method="POST" enctype="multipart/form-data" onsubmit="showLoading()">
+                <input type="hidden" name="media_type" value="video">
+                
+                <label class="block mb-4">
+                    <span class="sr-only">Video Seç</span>
+                    <input type="file" name="file" accept=".mp4,.mov,.avi,.mkv" required
+                        class="block w-full text-sm text-gray-300
+                        file:mr-4 file:py-3 file:px-6
+                        file:rounded-full file:border-0
+                        file:text-sm file:font-bold
+                        file:bg-pink-600 file:text-white
+                        hover:file:bg-pink-700 cursor-pointer transition-colors"/>
+                </label>
+                
+                <button type="submit" class="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold py-3 rounded-full hover:scale-105 transition-transform duration-300 shadow-lg mt-4">
+                    🚀 Videoyu Sıkıştır ve İndir
+                </button>
+            </form>
+        </div>
+
+        <div class="bg-white/10 backdrop-blur-lg border border-white/20 p-8 rounded-2xl shadow-2xl hover:shadow-blue-500/20 transition-all duration-300">
+            <h2 class="text-3xl font-bold mb-2 flex items-center gap-2">📸 Fotoğraf Küçült</h2>
+            <p class="text-sm text-gray-400 mb-6">Desteklenenler: JPG, JPEG, PNG, WEBP</p>
+            
+            <form action="/upload" method="POST" enctype="multipart/form-data" onsubmit="showLoading()">
+                <input type="hidden" name="media_type" value="photo">
+                
+                <label class="block mb-4">
+                    <span class="sr-only">Fotoğraf Seç</span>
+                    <input type="file" name="file" accept=".jpg,.jpeg,.png,.webp" required
+                        class="block w-full text-sm text-gray-300
+                        file:mr-4 file:py-3 file:px-6
+                        file:rounded-full file:border-0
+                        file:text-sm file:font-bold
+                        file:bg-blue-600 file:text-white
+                        hover:file:bg-blue-700 cursor-pointer transition-colors"/>
+                </label>
+                
+                <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold py-3 rounded-full hover:scale-105 transition-transform duration-300 shadow-lg mt-4">
+                    ✨ Fotoğrafı Sıkıştır ve İndir
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+    <div id="loadingScreen" class="hidden fixed inset-0 bg-black/80 z-50 flex flex-col items-center justify-center backdrop-blur-sm">
+        <div class="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-24 w-24 mb-6"></div>
+        <h2 class="text-2xl font-bold text-white text-center">Dosyan İşleniyor... ⚙️</h2>
+        <p class="text-gray-300 mt-2 text-center max-w-md">Büyük dosyalarda bu işlem bilgisayarının hızına göre birkaç dakika sürebilir. Lütfen sayfayı kapatma!</p>
+    </div>
+
+    <script>
+        // Form gönderildiğinde yükleme ekranını gösteren fonksiyon
+        function showLoading() {
+            document.getElementById('loadingScreen').classList.remove('hidden');
+            
+            // Kullanıcı dosyayı indirdiğinde loading ekranını kaldırmak için bir süre sonra kontrol ediyoruz.
+            // (Dosya inince sayfa yenilenmez, bu yüzden en basit kullanıcı deneyimi hilesi 
+            // ekranı birkaç saniye sonra kendi kendine kapatmaktır veya indirme tetiklendiğinde.)
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 10000); // 10 Saniye sonra loading ekranını kapatır. Çok uzun süren videolarda bu süreyi artırabilirsin.
+        }
+    </script>
+</body>
+</html>
