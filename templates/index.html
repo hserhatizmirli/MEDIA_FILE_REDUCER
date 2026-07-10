@@ -3,100 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Süper Hızlı Medya Sıkıştırıcı</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Medya Sıkıştırıcı - ArnecaTech</title>
+    <script src="{{ url_for('static', filename='tailwind.js') }}"></script>
     <style>
-        /* Yükleme Animasyonu CSS'i */
-        .loader {
-            border-top-color: #f472b6; 
-            -webkit-animation: spinner 1.5s linear infinite; 
-            animation: spinner 1.5s linear infinite; 
+        .progress-bg { background-color: #374151; border-radius: 9999px; overflow: hidden; width: 100%; height: 1.5rem; }
+        .progress-bar {
+            background-color: #ec4899; height: 100%; width: 100%;
+            background-image: linear-gradient(45deg, rgba(255,255,255,0.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.15) 75%, transparent 75%, transparent);
+            background-size: 1rem 1rem; animation: progress-stripes 1s linear infinite;
         }
-        @keyframes spinner { 
-            0% { transform: rotate(0deg); } 
-            100% { transform: rotate(360deg); } 
-        }
+        @keyframes progress-stripes { from { background-position: 1rem 0; } to { background-position: 0 0; } }
     </style>
 </head>
-<body class="bg-gradient-to-br from-indigo-900 via-purple-900 to-black min-h-screen font-sans text-white flex flex-col items-center justify-center p-4">
+<body class="bg-gradient-to-br from-indigo-900 via-purple-900 to-black min-h-screen font-sans text-white flex flex-col items-center p-4 relative">
 
-    <div class="text-center mb-12">
+    <a href="/logout" class="absolute top-4 right-4 bg-red-600/80 hover:bg-red-700 text-white px-4 py-2 rounded text-sm font-bold border border-red-500/50 transition-colors">
+        Çıkış Yap
+    </a>
+
+    <div class="text-center mb-8 mt-12">
         <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-yellow-500 mb-4 drop-shadow-lg">
-            Medya Sıkıştırıcı Pro ⚡
+            Medya Sıkıştırıcı
         </h1>
-        <p class="text-lg text-gray-300">Büyük dosyaları yükle, sihrin gerçekleşmesini bekle ve anında indir!</p>
-        <p class="text-sm text-pink-400 mt-2 font-bold">Maksimum Yükleme Sınırı: 1 GB</p>
+        <p class="text-gray-300">İşlem türünü seçin, dosyanızı yükleyin ve sonucu aşağıdan indirin.</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl mb-8">
         
-        <div class="bg-white/10 backdrop-blur-lg border border-white/20 p-8 rounded-2xl shadow-2xl hover:shadow-pink-500/20 transition-all duration-300">
-            <h2 class="text-3xl font-bold mb-2 flex items-center gap-2">🎬 Video Küçült</h2>
-            <p class="text-sm text-gray-400 mb-6">Desteklenenler: MP4, MOV, AVI, MKV</p>
-            
-            <form action="/upload" method="POST" enctype="multipart/form-data" onsubmit="showLoading()">
+        <div class="bg-white/10 backdrop-blur-lg border border-white/20 p-8 rounded-2xl shadow-2xl flex flex-col items-center text-center">
+            <h2 class="text-2xl font-bold mb-4">Video Küçült</h2>
+            <form onsubmit="handleUpload(event, this)">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 <input type="hidden" name="media_type" value="video">
-                
-                <label class="block mb-4">
-                    <span class="sr-only">Video Seç</span>
-                    <input type="file" name="file" accept=".mp4,.mov,.avi,.mkv" required
-                        class="block w-full text-sm text-gray-300
-                        file:mr-4 file:py-3 file:px-6
-                        file:rounded-full file:border-0
-                        file:text-sm file:font-bold
-                        file:bg-pink-600 file:text-white
-                        hover:file:bg-pink-700 cursor-pointer transition-colors"/>
-                </label>
-                
-                <button type="submit" class="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold py-3 rounded-full hover:scale-105 transition-transform duration-300 shadow-lg mt-4">
-                    🚀 Videoyu Sıkıştır ve İndir
+                <input type="file" name="file" accept=".mp4,.mov,.avi,.mkv" required class="block w-full text-sm text-gray-300 mb-6"/>
+                <button type="submit" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 rounded shadow-lg transition-colors">
+                    Videoyu Sıkıştır
                 </button>
             </form>
         </div>
 
-        <div class="bg-white/10 backdrop-blur-lg border border-white/20 p-8 rounded-2xl shadow-2xl hover:shadow-blue-500/20 transition-all duration-300">
-            <h2 class="text-3xl font-bold mb-2 flex items-center gap-2">📸 Fotoğraf Küçült</h2>
-            <p class="text-sm text-gray-400 mb-6">Desteklenenler: JPG, JPEG, PNG, WEBP</p>
-            
-            <form action="/upload" method="POST" enctype="multipart/form-data" onsubmit="showLoading()">
+        <div class="bg-white/10 backdrop-blur-lg border border-white/20 p-8 rounded-2xl shadow-2xl flex flex-col items-center text-center">
+            <h2 class="text-2xl font-bold mb-4">Fotoğraf Küçült</h2>
+            <form onsubmit="handleUpload(event, this)">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 <input type="hidden" name="media_type" value="photo">
-                
-                <label class="block mb-4">
-                    <span class="sr-only">Fotoğraf Seç</span>
-                    <input type="file" name="file" accept=".jpg,.jpeg,.png,.webp" required
-                        class="block w-full text-sm text-gray-300
-                        file:mr-4 file:py-3 file:px-6
-                        file:rounded-full file:border-0
-                        file:text-sm file:font-bold
-                        file:bg-blue-600 file:text-white
-                        hover:file:bg-blue-700 cursor-pointer transition-colors"/>
-                </label>
-                
-                <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold py-3 rounded-full hover:scale-105 transition-transform duration-300 shadow-lg mt-4">
-                    ✨ Fotoğrafı Sıkıştır ve İndir
+                <input type="file" name="file" accept=".jpg,.jpeg,.png,.webp" required class="block w-full text-sm text-gray-300 mb-6"/>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded shadow-lg transition-colors">
+                    Fotoğrafı Sıkıştır
                 </button>
             </form>
         </div>
-
     </div>
 
-    <div id="loadingScreen" class="hidden fixed inset-0 bg-black/80 z-50 flex flex-col items-center justify-center backdrop-blur-sm">
-        <div class="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-24 w-24 mb-6"></div>
-        <h2 class="text-2xl font-bold text-white text-center">Dosyan İşleniyor... ⚙️</h2>
-        <p class="text-gray-300 mt-2 text-center max-w-md">Büyük dosyalarda bu işlem bilgisayarının hızına göre birkaç dakika sürebilir. Lütfen sayfayı kapatma!</p>
+    <div id="resultBox" class="hidden bg-white/10 backdrop-blur-lg border border-green-500/50 p-8 rounded-2xl shadow-2xl w-full max-w-2xl text-center">
+        <h3 class="text-2xl font-bold text-green-400 mb-4">İşlem Başarılı!</h3>
+        <div class="flex justify-around items-center bg-black/30 p-4 rounded-lg mb-6">
+            <div><p class="text-gray-400 text-sm">Orijinal</p><p id="origSize" class="text-xl font-bold text-red-400">-</p></div>
+            <div class="text-gray-500 text-2xl">➔</div>
+            <div><p class="text-gray-400 text-sm">Yeni</p><p id="compSize" class="text-xl font-bold text-green-400">-</p></div>
+        </div>
+        <a id="downloadBtn" href="#" download class="inline-block w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-lg text-lg transition-colors">İndir</a>
+    </div>
+
+    <div id="loadingScreen" class="hidden fixed inset-0 bg-black/90 z-50 flex flex-col items-center justify-center px-4">
+        <h2 class="text-2xl font-bold text-white mb-6">Dosyanız İşleniyor...</h2>
+        <div class="progress-bg"><div class="progress-bar"></div></div>
     </div>
 
     <script>
-        // Form gönderildiğinde yükleme ekranını gösteren fonksiyon
-        function showLoading() {
+        async function handleUpload(event, form) {
+            event.preventDefault();
             document.getElementById('loadingScreen').classList.remove('hidden');
-            
-            // Kullanıcı dosyayı indirdiğinde loading ekranını kaldırmak için bir süre sonra kontrol ediyoruz.
-            // (Dosya inince sayfa yenilenmez, bu yüzden en basit kullanıcı deneyimi hilesi 
-            // ekranı birkaç saniye sonra kendi kendine kapatmaktır veya indirme tetiklendiğinde.)
-            setTimeout(() => {
-                document.getElementById('loadingScreen').classList.add('hidden');
-            }, 10000); // 10 Saniye sonra loading ekranını kapatır. Çok uzun süren videolarda bu süreyi artırabilirsin.
+            document.getElementById('resultBox').classList.add('hidden');
+
+            const formData = new FormData(form);
+            // ÇÖZÜM: CSRF token'ı header olarak gönderiyoruz
+            const csrfToken = form.querySelector('input[name="csrf_token"]').value;
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': csrfToken },
+                    body: formData
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    document.getElementById('origSize').innerText = result.original_size;
+                    document.getElementById('compSize').innerText = result.compressed_size;
+                    const downloadBtn = document.getElementById('downloadBtn');
+                    downloadBtn.href = "/download/" + result.filename;
+                    document.getElementById('resultBox').classList.remove('hidden');
+                } else {
+                    alert("Hata: " + result.error);
+                }
+            } catch (e) { alert("Bağlantı hatası!"); }
+            finally { document.getElementById('loadingScreen').classList.add('hidden'); }
         }
     </script>
 </body>
