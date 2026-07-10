@@ -12,7 +12,7 @@ Security: Basic authentication for access control.
 Cleanup: Automatically deletes processed files after 15 minutes.
 
 ⚙️ Requirements
-Python 3.7+
+Python: 3.7+
 
 FFmpeg: Must be installed and configured.
 
@@ -62,7 +62,7 @@ Güvenlik: Giriş paneli ile temel yetkilendirme.
 Otomatik Temizleme: İşlenmiş dosyaları 15 dakika sonra otomatik olarak siler.
 
 ⚙️ Gereksinimler
-Python 3.7+
+Python: 3.7+
 
 FFmpeg: Sisteminizde kurulu ve erişilebilir olmalıdır.
 
